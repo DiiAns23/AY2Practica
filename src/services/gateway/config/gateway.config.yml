@@ -1,0 +1,110 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  create:
+    host: '*'
+    paths: '/create*'
+    methods: [ 'GET' ]
+  read:
+    host: '*'
+    paths: '/read*'
+    methods: [ 'GET' ]
+  update:
+    host: '*'
+    paths: '/update*'
+    methods: [ 'GET' ]
+  delete:
+    host: '*'
+    paths: '/delete*'
+    methods: [ 'GET' ]
+  info:
+    host: '*'
+    paths: '/info*'
+    methods: [ 'GET' ]
+serviceEndpoints:
+  serviceCreate:
+    url: 'http://localhost:3001'
+  serviceRead:
+    url: 'http://localhost:3002'
+  serviceUpdate:
+    url: 'http://localhost:3003'
+  serviceDelete:
+    url: 'http://localhost:3004'
+  serviceInfo:
+    url: 'http://localhost:3005'
+policies:
+  - log
+  - proxy
+  - rate-limit
+pipelines:
+  createPipeline:
+    apiEndpoints:
+      - create
+    policies:
+      - rate-limit: &rate-limit
+          - action:
+              max: 10
+              windowMs: 5000
+              message: '<h1>Demasiadas peticiones</h1>'
+      - log:
+          - action:
+              message: '[create]${req.method}'
+      - proxy:
+          - action:
+              serviceEndpoint: serviceCreate 
+              changeOrigin: true
+
+  readPipeline:
+    apiEndpoints:
+      - read
+    policies:
+      - rate-limit: *rate-limit
+      - log:
+          - action:
+              message: '[read]${req.method}'
+      - proxy:
+          - action:
+              serviceEndpoint: serviceRead 
+              changeOrigin: true
+  
+  updatePipeline:
+    apiEndpoints:
+      - update
+    policies:
+      - rate-limit: *rate-limit
+      - log:
+          - action:
+              message: '[update]${req.method}'
+      - proxy:
+          - action:
+              serviceEndpoint: serviceUpdate
+              changeOrigin: true
+
+  deletePipeline:
+    apiEndpoints:
+      - delete
+    policies:
+      - rate-limit: *rate-limit
+      - log:
+          - action:
+              message: '[delete]${req.method}'
+      - proxy:
+          - action:
+              serviceEndpoint: serviceDelete
+              changeOrigin: true
+  
+  infoPipeline:
+    apiEndpoints:
+      - info
+    policies:
+      - rate-limit: *rate-limit
+      - log:
+          - action:
+              message: '[info]${req.method}'
+      - proxy:
+          - action:
+              serviceEndpoint: serviceInfo
+              changeOrigin: true

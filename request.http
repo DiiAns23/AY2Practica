@@ -1,0 +1,15 @@
+GET  http://127.0.0.1:8080/create/nuevapelicula/Iron%20Man/2008/B/Accion/Un%20empresario%20millonario%20construye%20un%20traje%20blindado%20y%20lo%20usa%20para%20combatir%20el%20crimen%20y%20el%20terrorismo HTTP/1.1
+
+
+###
+
+GET http://127.0.0.1:8080/read/peliculas HTTP/1.1
+
+
+###
+GET http://127.0.0.1:8080/update/actualizar/1/Avengers%20Endgame/2019/A/Accion/Thanos%20destruye%20la%20mitad%20del%20universo%20y%20los%20vengadores%20deben%20reunirse%20para%20derrotarlo HTTP/1.1
+
+###
+
+GET http://127.0.0.1:8080/delete/delete/1 HTTP/1.1
+
